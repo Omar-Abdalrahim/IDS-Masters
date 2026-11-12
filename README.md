@@ -8,6 +8,39 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-12 12:19:55+02:00 — Increase ADASYN balance tolerance to 3% across all preprocessing notebooks
+
+**Timezone:** Africa/Cairo.
+
+**Notebooks:**
+
+- `Notebooks/CIC_Preprocessing.ipynb`
+- `Notebooks/Fork of CIC_Preprocessing (CIC-BoT-IoT).ipynb`
+- `Notebooks/Fork of CIC_Preprocessing (CSE-CIC-IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_BOT_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+- `Notebooks/NF-Preprocessing.ipynb`
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Changed `ADASYN_BALANCE_TOLERANCE` from `0.01` to `0.03` in both main preprocessing notebooks and all six forks (eight notebooks total).
+- Updated matching comments and markdown explanations from 1% to 3%. With the existing selection expression, Attack classes with counts at least 97% of the largest class are left unchanged by ADASYN; smaller targeted classes still request the largest class count.
+- Preserved preprocessing, dataset-specific settings, sampling caps, splitting, sampler calls, diagnostics and plots. Each notebook changes only its imbalance configuration cell and explanatory markdown. Earlier README history remains intact and records the settings used at those earlier dates.
+
+**Validation:**
+
+- Parsed all eight updated notebooks and checked the actual Python assignment is `0.03`; compiled each changed configuration cell.
+- Verified two source-cell edits per notebook and no remaining 1% tolerance assignment/comment/explanation in notebook sources. Resampling and other code cells are unchanged.
+- Full dataset or sampler runs were not repeated for this configuration-only change.
+
+**Rerun instructions:**
+
+- Pull/import the updated notebook and rerun its imbalance configuration cell before resampling. Reload prepared training arrays if previous sampler cells already released them; rerun ADASYN, Tomek Links and balanced export to apply the new tolerance to generated data. Existing preprocessing artifacts can be reused.
+
 ### 2026-11-12 11:20:36+02:00 — Apply shared improvements to remaining NF and CIC notebooks
 
 **Timezone:** Africa/Cairo.
