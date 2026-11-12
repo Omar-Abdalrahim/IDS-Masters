@@ -8,6 +8,44 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-12 11:20:36+02:00 — Apply shared improvements to remaining NF and CIC notebooks
+
+**Timezone:** Africa/Cairo.
+
+**Notebooks:**
+
+- `Notebooks/CIC_Preprocessing.ipynb`
+- `Notebooks/Fork of CIC_Preprocessing (CIC-BoT-IoT).ipynb`
+- `Notebooks/Fork of CIC_Preprocessing (CSE-CIC-IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_BOT_IOT).ipynb`
+- `Notebooks/NF-Preprocessing.ipynb`
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Updated the original NF notebook and its NF_BOT_IOT fork to match the previously updated NF_TON_IOT implementation, preserving each notebook's dataset selection and metadata. This includes fixed SECOND_BYTES log1p compression before imputation, matching fit/transform handling, complete-column skipping, shrinking exclusions, named frozen-imputer lookup, timestamped output folders, optional-benchmark handling, timings/shapes, separate sampler/results/plot cells, categorical-domain snapshots and genuine generated-row previews.
+- Adapted the shared improvements to the CIC base and both CIC forks: `skip_complete=True`, second-resolution output folder timestamps, export batch/timing reports, ADASYN/Tomek start/end times and shapes, post-ADASYN matrix size, added/removed rows, and separate Tomek Links, timing/distribution-table and Plotly cells. No periodic status thread or recurring elapsed message is included.
+- CIC retains its own `Protocol` one-hot encoding, sampled imputer/scaler fitting, full-training category vocabulary and optional PCA over scaled numeric measurements. Protocol indicators remain outside numeric PCA. CIC receives no extreme-column log transform or shrinking exception; removed the obsolete SECOND_BYTES float64-schema exception and related generated-README wording from those notebooks. Ordinary numeric/PCA outputs use float32 and Protocol indicators use uint8 before resampling; synthetic coordinates remain floating point afterward.
+- Added the raw-domain snapshot and independent `RUN_CATEGORY_DIAGNOSTICS` test to CIC using `categories__Protocol_*` output names. The exact raw/processed/final unique counts use the same training population, with bounded value examples, new/non-binary entries and genuine ADASYN previews (up to five per targeted Attack) marked by actual Tomek retention. Diagnostic metadata stays outside model datasets.
+- Preserved dataset choices, paths, per-class sampling caps, split/seed/holdout settings, scaler/PCA configuration, target restoration and existing GitHub headings. In particular, retained the CSE-CIC fork's original Label-to-Attack conversion and binary Label creation. The three already updated NF forks are unchanged.
+- Updated notebook and generated-output README instructions for each family. Cleared old code outputs/execution metadata because they precede the updated pipeline. Retained all earlier root README history; no separate changes.md currently exists.
+
+**Validation:**
+
+- Parsed all five notebooks and compiled every Python code cell, accounting for IPython magics: 61 code cells in each NF notebook and 41 in each CIC notebook.
+- Verified preservation of source-loading/target-conversion cells, dataset selection, sampling and split source, notebook metadata, CIC configuration and existing GitHub headings. Verified NF source parity with the updated NF_TON_IOT reference except the BoT dataset selection. Checked CIC sources contain no SECOND_BYTES/log1p/shrinking-exception handling or NF-specific encoder references.
+- Executed the actual fit, Arrow schema, batched export, joblib save/reload, imbalance loading, ADASYN, Tomek, summary, chart, balanced-export and categorical-diagnostic cells on small synthetic datasets in all five notebooks. Exported training tables matched the direct fitted transforms using their exact Arrow schema; repeated chart rendering was tested with browser display suppressed.
+- Exercised CIC with numeric PCA disabled and enabled (two components, separate 50-row PCA cap, 80-row imputer/scaler cap). Exercised NF with extreme byte measurements near 1e261/1e257 and missing values; transformed outputs were finite without numerical RuntimeWarnings. Tested both synthesis and already-balanced/skipped-ADASYN cases in the base notebooks.
+- Compared final ADASYN/Tomek arrays with the original sampler cells on the same prepared inputs: exact equality. Verified generated preview values/targets against actual ADASYN appended rows, retention against Tomek sample_indices_, raw-domain counts, processed/final unique/new-entry counts and balanced output columns/schema.
+
+**Rerun instructions and limits:**
+
+- Pull/import the updated notebooks and run from Setup through preprocessing, export, ADASYN, Tomek and balanced export to create consistent artifacts and diagnostic snapshots. Then run the categorical Testing cell with `RUN_CATEGORY_DIAGNOSTICS=True` and the matching `OUTPUT_DIR`.
+- NF outputs must be regenerated for the new compression flow. Pass raw data to the saved NF preprocessor without pre-logging it; already prepared files must not be transformed again. Define its existing encoding helpers and compression helper before loading joblib in a new session.
+- CIC keeps its existing sampled fitting and optional numeric PCA behavior. Changing PCA_COMPONENTS changes numeric output columns and requires downstream retraining. The new diagnostic snapshots require raw training frames during export and generated rows during resampling; older runs lack these files.
+- Full source datasets and Kaggle/Colab sessions were not run here. Synthetic integrations establish the checked behavior on those inputs, not full-data runtime, memory use or model accuracy. One-column categorical scans still scale with row count/cardinality.
+
 ### 2026-11-12 10:16:00+02:00 — Inspect categorical domains and genuine ADASYN examples in Testing
 
 **Timezone:** Africa/Cairo.
@@ -175,6 +213,7 @@ This written history starts with the entry below. Earlier versions remain availa
 - Restart the Kaggle/Colab session and run the notebook from Setup through preprocessing, export, ADASYN and Tomek Links. Regenerate the preprocessor and prepared datasets; do not reuse older artifacts for this new flow.
 - Do not manually log-transform data before passing it to this saved preprocessor, and do not transform the prepared Parquet data again. When loading joblib in a new session, define `EXTREME_COLUMNS` and `compress_extreme_values` along with the existing encoding helpers first.
 - The full NF-ToN-IoT source dataset was unavailable in the editing environment. Full categorical processing, Parquet export, and the full ADASYN/Tomek run have not been executed here. Synthetic numerical checks are not a full-data performance or accuracy evaluation.
+
 
 
 
