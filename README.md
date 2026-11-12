@@ -8,6 +8,39 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-12 08:13:50+02:00 — Report resampling runtime and separate charts in all three forks
+
+**Timezone:** Africa/Cairo.
+
+**Notebooks:**
+
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Added timing around each main ADASYN and Tomek Links call using `perf_counter`. Print feature/target shapes before and after each stage, the number of rows added/removed, and post-ADASYN feature-matrix size and dtype. Retain `adasyn_seconds`, `tomek_seconds`, row counts and a small `resampling_summary` table for inspection.
+- Added periodic elapsed-time messages via a small status context manager. `RESAMPLING_STATUS_SECONDS = 30` controls the update interval. Start, finish and interruption/error messages are flushed immediately; the background status thread is stopped on completion, exceptions and keyboard interruption.
+- Neither sampler exposes a built-in progress percentage, completed-query count or ETA. The periodic message reports the active stage and elapsed time only; it does not measure row progress or guarantee useful computation is advancing. No invented percentage or remaining-time estimate is displayed. ADASYN skipped due to approximate balance is explicitly marked with zero sampler runtime.
+- Separated Tomek Links, the class-distribution/timing tables and the Plotly chart into distinct cells with headings. The plot can be redrawn from small result tables without repeating resampling. Free expanded ADASYN inputs immediately after Tomek Links, before plotting/export.
+- Preserved the full training-only samplers, sampling policy, neighbour settings, random seed, class tolerance, dataset-specific configuration, preprocessing, target restoration and export logic. Only runtime reporting and cell organization changed. Cleared stale outputs/execution metadata from modified and following code cells.
+
+**Validation:**
+
+- Parsed all three notebooks and compiled each notebook's 60 Python code cells, accounting for IPython magic syntax.
+- Executed the original and updated ADASYN/Tomek cells using the installed imbalanced-learn implementation on small synthetic multiclass inputs, both requiring ADASYN and already balanced. For every fork, final feature/target arrays and class-distribution tables matched exactly; timings were nonnegative and the skipped case reported zero ADASYN time.
+- Executed the separate Plotly cell twice after the expanded ADASYN inputs were freed, with browser rendering suppressed. Checked timing-summary row counts and shape/added/removed-row messages.
+- Exercised periodic elapsed updates and status-thread cleanup on successful completion, exceptions and keyboard interruption. Verified unrelated existing cell sources are unchanged.
+
+**Rerun instructions and limits:**
+
+- Pull/import the updated notebooks. In an existing session, run the imbalance configuration/status-helper cell, then load the prepared training arrays and run the ADASYN, Tomek Links, results and plot cells in order. ADASYN consumes/deletes `X_train`/`y_train`; Tomek Links releases `X_adasyn`/`y_adasyn`, so reload/recompute inputs before rerunning either sampler. Tables/plots can be repeated using their retained result variables.
+- Existing prepared datasets remain compatible; these reporting changes do not require repeating preprocessing. Earlier log1p changes still require regenerated artifacts if not already rerun.
+- Full source datasets and Kaggle/Colab sessions were not executed here. Synthetic integration tests establish output parity on the tested inputs, not full-dataset runtime, memory use or rendering behavior. Status output can be delayed by notebook output handling or operations that hold Python's GIL; it is not a liveness guarantee.
+
 ### 2026-11-11 11:35:45+02:00 — Apply NF overflow prevention to CSE-CIC-IDS2018 and UNSW-NB15 forks
 
 **Timezone:** Africa/Cairo.
@@ -75,4 +108,5 @@ This written history starts with the entry below. Earlier versions remain availa
 - Restart the Kaggle/Colab session and run the notebook from Setup through preprocessing, export, ADASYN and Tomek Links. Regenerate the preprocessor and prepared datasets; do not reuse older artifacts for this new flow.
 - Do not manually log-transform data before passing it to this saved preprocessor, and do not transform the prepared Parquet data again. When loading joblib in a new session, define `EXTREME_COLUMNS` and `compress_extreme_values` along with the existing encoding helpers first.
 - The full NF-ToN-IoT source dataset was unavailable in the editing environment. Full categorical processing, Parquet export, and the full ADASYN/Tomek run have not been executed here. Synthetic numerical checks are not a full-data performance or accuracy evaluation.
+
 
