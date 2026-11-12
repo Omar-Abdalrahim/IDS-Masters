@@ -8,6 +8,43 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-12 10:16:00+02:00 — Inspect categorical domains and genuine ADASYN examples in Testing
+
+**Timezone:** Africa/Cairo.
+
+**Notebooks:**
+
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Added an independent `RUN_CATEGORY_DIAGNOSTICS = True` flag and one diagnostic code cell near the top of Testing in every fork. It uses the main saved outputs, not the legacy benchmark's different encoding.
+- The main export now saves `raw_categorical_summary.json` before releasing raw training frames: exact unique counts (including missing), missing-row counts, up to 20 example entries per cleaned/unencoded categorical training feature, and mappings from raw inputs to encoded outputs. This baseline uses the same training rows as `train.parquet`.
+- The Testing cell reads one encoded Parquet column at a time from `train.parquet` and `train_adasyn_tomek.parquet`. It reports exact processed/final unique counts, new unique-entry counts, bounded value previews and non-binary final unique counts for one-hot, binary-port and flag indicators. `MAX_UNIQUE_EXAMPLES = 12` controls encoded-value previews only; counts use every row.
+- Joint identifier PCA outputs are explicitly marked continuous and mapped to all of their IP/DNS inputs; they are excluded from binary-indicator domain checks. The report compares domains, not category frequencies or semantic validity.
+- ADASYN now saves up to five actual appended synthetic rows per targeted Attack in `adasyn_generated_preview.parquet`, selecting encoded columns plus preview-only row/target metadata. After Tomek, the preview records retention using its actual `sample_indices_`. Testing displays these rows and highlights non-binary generated indicator coordinates. A small preview can miss fractional coordinates, so the final full-data domain report remains separate.
+- The generated preview is captured before matrix cleanup, including a valid empty preview when ADASYN is skipped. Diagnostic metadata is not added to model feature matrices or the balanced training schema. Updated the generated output README and Testing instructions with the new files and prerequisites.
+- Preserved preprocessing, split/sampling settings, sampler parameters, final resampled arrays, existing result/plot cells, benchmark logic and export schema. No periodic status messages were introduced. All earlier root README history is retained.
+
+**Validation:**
+
+- Parsed each notebook and compiled all 61 code cells, accounting for IPython magic syntax. Verified only five existing sources changed and two diagnostic cells were added.
+- Used each notebook's actual Encoding implementation (one-hot, BinaryEncoder, flag decomposition, ICMP decoding and joint PCA) on small synthetic multiclass inputs, with missing raw-category values included. Exercised both ADASYN synthesis and already-balanced/no-synthesis cases.
+- Verified raw baseline counts/missing counts, every encoded-column mapping, exact unique/new-entry counts against pandas, PCA exclusion from binary checks, and detection of fractional generated indicators.
+- Matched each preview row to its actual ADASYN output index, class and encoded values; checked its Tomek-retention flag and the five-per-Attack cap. Empty previews and missing-diagnostic-file instructions also passed.
+- Compared original and updated ADASYN/Tomek outputs: final arrays matched exactly. Executed the actual balanced-export and diagnostic cells; balanced file columns/schema were preserved and preview metadata stayed separate.
+
+**Rerun instructions and limits:**
+
+- Run the updated main export while raw `train` and the fitted preprocessor are available to save the raw-domain baseline. Then run the updated imbalance loading, ADASYN and Tomek/export cells to create the generated preview and final training file. In Testing, enable `RUN_CATEGORY_DIAGNOSTICS` and run the new categorical comparison cell with `OUTPUT_DIR` pointing to that run.
+- Older runs lack these snapshots. If raw splits/matrices were released, recreate them through the normal loading/splitting/fitting/export and resampling flow. The diagnostic prints prerequisite guidance instead of silently rerunning samplers or labelling arbitrary final rows as generated.
+- The comparison uses all rows of each saved training stage while loading only one projected feature column at a time; full-data scans can take time and memory still scales with one column's cardinality. Example lists and generated previews are intentionally bounded.
+- Full source datasets and Kaggle/Colab sessions were not run here. Synthetic integration tests do not establish full-data runtime, accuracy or semantic validity of interpolated categorical coordinates.
+
 ### 2026-11-12 08:20:02+02:00 — Remove periodic resampling messages from all three forks
 
 **Timezone:** Africa/Cairo.
@@ -138,5 +175,6 @@ This written history starts with the entry below. Earlier versions remain availa
 - Restart the Kaggle/Colab session and run the notebook from Setup through preprocessing, export, ADASYN and Tomek Links. Regenerate the preprocessor and prepared datasets; do not reuse older artifacts for this new flow.
 - Do not manually log-transform data before passing it to this saved preprocessor, and do not transform the prepared Parquet data again. When loading joblib in a new session, define `EXTREME_COLUMNS` and `compress_extreme_values` along with the existing encoding helpers first.
 - The full NF-ToN-IoT source dataset was unavailable in the editing environment. Full categorical processing, Parquet export, and the full ADASYN/Tomek run have not been executed here. Synthetic numerical checks are not a full-data performance or accuracy evaluation.
+
 
 
