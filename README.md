@@ -8,6 +8,36 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-12 08:20:02+02:00 — Remove periodic resampling messages from all three forks
+
+**Timezone:** Africa/Cairo.
+
+**Notebooks:**
+
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Removed the 30-second "still running" updates, `RESAMPLING_STATUS_SECONDS`, and their background-thread machinery from all three forks at the user's request.
+- Retained stage start, finish/interruption and total elapsed-time messages. Input/output shapes, post-ADASYN size/dtype, added/removed row counts, timing-summary tables and separate Tomek Links/Plotly cells remain intact.
+- Updated each notebook's runtime-reporting instructions. Only the reporting helper/configuration and its explanatory markdown changed; sampler calls, preprocessing, dataset settings, result tables, plots and export code are unchanged.
+- Preserved all earlier README history; the preceding entry describes the superseded periodic-message implementation.
+
+**Validation:**
+
+- Parsed all three notebooks and compiled their 60 code cells each, accounting for IPython magic syntax.
+- Executed the simplified reporting helper on completion and failure; verified start/finish/error messages and exception propagation.
+- Checked all notebook sources for removal of the interval, recurring message and thread machinery. Verified all other cells are unchanged.
+
+**Rerun instructions and limits:**
+
+- Import/pull the updated notebooks and rerun the imbalance configuration/helper cell before the next resampling call. No preprocessing or dataset regeneration is required for this reporting-only change.
+- Full dataset and Kaggle/Colab runs were not repeated. Sampler behavior is unchanged.
+
 ### 2026-11-12 08:13:50+02:00 — Report resampling runtime and separate charts in all three forks
 
 **Timezone:** Africa/Cairo.
