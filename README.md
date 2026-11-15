@@ -8,6 +8,30 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 15:17:51+02:00 — Simplify NF_TON_IOT imbalance cells and format elapsed time
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Simplified the required class-imbalance workflow from 532 to 327 code lines and reduced its shared helpers from eight to four: batched matrix loading, generated-row previews, prepared-file fingerprinting and atomic checkpoint saving. Removed the timer context wrapper and settings/load/selection wrappers. Selection and checkpoint compatibility checks are now visible directly in their stage cells; consolidated repeated matrix loading and imports. Moved the optional saved-dtype/outlier inspections into Testing behind RUN_PREPARED_INSPECTIONS=False, preserving their functionality.
+- Retained the 100,000-per-class cap, automatic 0.5 selection/target policy and 3% tolerance, full ADASYN checkpoints and source/settings checks, RAM guard, binary Label/text Attack mapping, genuine synthetic previews, separate Tomek/table/Plotly cells, optional GPU startup and baseline plus 0.25/0.5/0.75 MLP comparisons. Existing ADASYN checkpoints and compatible model results remain reusable. Drive upload code remains removed.
+- Added one small shared format_duration function in Setup. All notebook-generated elapsed-time prints and reports now use hours/minutes/seconds, e.g. 01h 12m 08.4s, including preprocessing fitting, batched exports, restored ADASYN timings, main sampling summaries, prepared-data threshold metrics and legacy experiment fitting. Numeric seconds remain internal to arithmetic and checkpoint state.
+- Main timing CSV uses Time in place of Seconds. Threshold metrics use ADASYN time, Tomek time, Training time, Compute time and wall-time fields; legacy comparison results use fit_time instead of fit_seconds. Compatible older numeric-second model metrics are converted on reuse and written back in the new display format. Updated notebook guidance and the generated output README. Saved notebook/Kaggle metadata is unchanged; no other fork was edited.
+
+**Validation:**
+
+- Validated notebook schema and compiled all 67 code cells. Confirmed existing split, encoding, categorical-audit and GPU-startup cells plus top-level metadata remain unchanged.
+- Ran actual synthetic NF preprocessing and batched export, and compared old/new ADASYN and Tomek matrices/targets exactly. Verified balanced export and binary Label/text Attack preservation.
+- Tested fresh-session checkpoint restore, unchanged checkpoint format, stale settings/source/feature rejection, interrupted-write preservation, portable content signatures and the RAM guard. Checked automatic selection and the 3% tolerance boundary behavior.
+- Ran all four 30-epoch prepared-data MLP cases and verified saved-model accuracy, shared 0.5 ADASYN checkpoint reuse and completed-result reuse without retraining, including conversion of older numeric-second metrics. Exercised the legacy MLP comparison timing. Checked duration formatting at minute/hour boundaries and beyond 99 hours, plus formatted main/threshold timing tables and exports.
+
+**Rerun instructions and limits:** Reload the updated notebook and run the Setup/imports cell to define format_duration before running timed cells. Existing prepared outputs/checkpoints can be retained; run imbalance settings, both utility cells and checkpoint restore before continuing the numbered stages or threshold tests. Optional prepared inspections require RUN_PREPARED_INSPECTIONS=True and the original outlier_cols for the outlier report. Regenerate reports to replace earlier second-based columns; update downstream code that reads their former names. Full-dataset execution and live GPU execution were not repeated; validation used synthetic data. Preserving exported Kaggle metadata does not synchronize changes made only in an unsaved Kaggle draft.
+
 ### 2026-11-15 14:39:41+02:00 — Remove automatic Drive uploads from NF_TON_IOT
 
 **Timezone:** Africa/Cairo.
