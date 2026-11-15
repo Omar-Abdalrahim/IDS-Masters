@@ -8,6 +8,36 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 10:55:23+02:00 — Restore native UNSW-NB15 types before preprocessing
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/UNSW-Preprocessing.ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Corrected this notebook's copied NF-ToN-IoT dataset configuration to `UNSW-NB15` / `UNSW-NB15.parquet`. Native UNSW and NF-UNSW use different feature schemas; the NF notebook remains the workflow for the NetFlow extractor variant.
+- Added an explicit UNSW schema conversion before inspection, sampling and fitted preprocessing. Measurements use float64, integer-valued fields use the smallest fitting signed integer (nullable when missing), protocol/service/state use pandas categories, and IPs use strings. Label remains binary uint8 and Attack remains text. No raw float shrinking is applied.
+- Normalized case, whitespace, target names and supported native aliases (including attack_cat, Sintpkt, smeansz and res_bdy_len). Supported hexadecimal source/destination ports, preserving them as integer storage and treating them categorically downstream.
+- Recognized documented missing tokens in numeric fields, preserved the service category `-`, and filled blank Attack with Normal only for Label=0. Unknown fields require reviewed UNSW_TYPE_OVERRIDES entries; malformed numeric strings, fractional counts, out-of-range ports, missing/invalid targets and duplicate normalized column names raise explicit errors. Exact checks on decimal/scientific integer tokens prevent fractional parts from disappearing through float rounding. Integer parsing deliberately rejects values beyond 2**53-1.
+- Replaced NF-only flag/ICMP/category references with native UNSW one-hot protocol/service/state and binary-port encoding. Preserved the experimental ordinal/scaler/PCA IP representation when IP columns exist; omit that branch for variants without IPs. Updated coverage diagnostics, feature selection, saved schema, exported README and independent Testing loader/comparison feature selection accordingly. Learned transformations still fit training data only.
+- Displayed before/after types and source missing counts, and saved type_conversion_report.csv alongside prepared outputs. Existing sampling cap, split/holdout settings, scaler choices, imbalance settings and sampler calls are retained. No other notebook is edited. Older README history is preserved verbatim.
+
+**Validation:**
+
+- Validated notebook JSON against its nbformat schema and compiled all code cells with IPython magic handling.
+- Exercised string-only synthetic inputs covering every mapped numeric field, large TCP sequence integers (4294967295), hexadecimal/missing ports, float missing markers, category missing values, service `-`, blank normal Attack, native aliases, idempotent recasting and explicit extra-column roles. Verified rejection of malformed numbers, fractional counts (including a fractional token that float parsing would round to 1), invalid labels/ports, unknown fields, duplicate names and missing attack targets.
+- Executed the notebook's load, sampling/distribution comparison, cleanup, split, outlier reporting, fit, category coverage, Arrow schema and export cells on synthetic variants both with and without IPs/ports. Checked prepared numeric values against direct fitted transformations, finite outputs, target/feature separation, uint8 Label, optional PCA, saved conversion reports and joblib reload equivalence. Tested with StandardScaler and the configured quantile-to-normal scalers.
+- Executed the independent Testing loader on both variants and confirmed numeric targets/measurement columns. Full neural-network comparisons and ADASYN/Tomek runs were not repeated because their sampling algorithms are unchanged.
+
+**Rerun instructions and limits:**
+
+- Restart/import the updated notebook and run from Setup, including the new type-conversion definition cell before Load and inspect or independent Testing. Regenerate the preprocessor and prepared train/validation/test outputs; earlier NF-configured artifacts are incompatible with the corrected native UNSW flow.
+- Pass future raw inputs through cast_unsw_types before the saved preprocessor so names/types match. Do not transform already prepared Parquet files again. Review any unmapped source-specific column explicitly instead of guessing its role.
+- The user's full source Parquet was unavailable here. Validation used synthetic original-UNSW schemas, so full-data values, runtime, RAM requirements and model accuracy remain unverified. The workflow still uses a fresh 70/15/15 split rather than preserving an externally supplied official train/test partition. Identifier PCA remains experimental and should be compared with dropping IPs.
+
 ### 2026-11-12 12:19:55+02:00 — Increase ADASYN balance tolerance to 3% across all preprocessing notebooks
 
 **Timezone:** Africa/Cairo.
