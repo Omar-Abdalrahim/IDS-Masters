@@ -8,6 +8,31 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 11:51:04+02:00 — Normalize internal whitespace in UNSW headers
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/UNSW-Preprocessing.ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Remove all column-name whitespace before lowercasing and alias lookup, correcting the source spelling `ct_src_ ltm` to the existing integer feature `ct_src_ltm`.
+- Retain duplicate-name rejection after normalization and explicit errors for genuinely unknown fields. Feature values, target normalization and downstream preprocessing are unchanged.
+- Updated the column-type guide; preserved all earlier README history.
+
+**Validation:**
+
+- Ran the actual casting helper on synthetic string inputs with the reported internal space, surrounding spaces, tabs and non-breaking spaces. Results matched canonical-header inputs, including nullable integer values and the requested Label/Attack targets.
+- Verified duplicate headers created by normalization are rejected and genuinely unknown fields still raise errors.
+- Validated notebook schema and compiled all 48 code cells.
+
+**Rerun instructions and limits:**
+
+- Reload the updated notebook, rerun the type-conversion definition cell, then rerun the Load and inspect cell so it reloads the raw Parquet. A full restart is unnecessary for this header-only fix.
+- Full source-data execution was not repeated; the validation covers the reported header and synthetic variants.
+
 ### 2026-11-15 11:22:01+02:00 — Match UNSW binary and attack-type targets to the NF format
 
 **Timezone:** Africa/Cairo.
