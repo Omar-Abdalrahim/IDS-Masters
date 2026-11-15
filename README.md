@@ -8,6 +8,20 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 14:39:41+02:00 — Remove automatic Drive uploads from NF_TON_IOT
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:** Removed the automatic Drive backup setup, rclone installation option, credentials/upload helper, retry cells and all 24 upload calls at the user's request. Updated notebook guidance and the generated output README to describe local saving. Local prepared datasets, ADASYN checkpoints, previews, reports, models and plots continue to save under OUTPUT_DIR. Retained the original Colab mount/input-output paths, 100,000-per-class cap, 0.5 ADASYN policy, 3% tolerance, checkpoint reuse, GPU option and baseline/threshold model comparisons. Other forks are unchanged.
+
+**Validation:** Validated notebook schema and compiled all 66 remaining code cells. Checked that no automatic-upload settings, helper calls or rclone references remain. Compared the retained executable code against the previous fork: only upload calls and documentation strings changed. Executed local atomic checkpoint save/reload without any Drive helper or configuration and verified matrix equality.
+
+**Rerun instructions and limits:** Reload/import the updated notebook; no rclone installation or Kaggle Drive secret is required. Existing local outputs/checkpoints can still be reused. Existing generated README files are updated when their export cell runs again. Previously uploaded Drive files are not deleted. Full preprocessing/model runs were not repeated because their executable logic is unchanged.
+
 ### 2026-11-15 14:23:07+02:00 — Add NF_TON_IOT partial balancing, checkpoints, Drive backup and model comparisons
 
 **Timezone:** Africa/Cairo.
