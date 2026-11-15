@@ -8,6 +8,34 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 12:14:09+02:00 — Preserve ESP SPI values in the UNSW destination-port slot
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/UNSW-Preprocessing.ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Corrected the overly broad 16-bit port validation after the user's diagnostic showed two `proto=esp` rows with `dsport=0x20205321` (538989345).
+- Verified the Argus client source: ArgusPrintDstPort routes ESP records to ArgusPrintEspSpi using the ESP flow SPI. RFC 4303 defines SPI as a 32-bit field. These values are consistent with protocol-specific export semantics rather than a transport port.
+- Permit 0–4294967295 for dsport only on ESP rows (case-insensitive esp or protocol number 50); preserve the parsed integer and its existing categorical encoding. Keep the 0–65535 bound for source ports and other destination-port rows, with existing missing/fractional/malformed-value handling.
+- Include offending protocol/raw/parsed examples in range errors. Updated notebook guidance and the generated output README. No clipping, deletion, imputation or new feature columns were introduced.
+- Sources: [Argus client implementation](https://github.com/openargus/clients/blob/main/common/argus_util.c), [RFC 4303 section 2.1](https://www.rfc-editor.org/rfc/rfc4303.html#section-2.1). Numeric consistency does not establish that every source packet/record is valid.
+
+**Validation:**
+
+- Tested the actual casting helper with the reported hexadecimal value, decimal/hexadecimal 32-bit limits, ESP spelling/protocol-code variants, mixed ESP/TCP/UDP rows, missing values and idempotent recasting.
+- Verified that values above 65535 still fail for TCP/UDP/ICMP destination slots and all source slots, while negative/fractional and above-32-bit ESP values fail. Ordinary valid ports remain accepted.
+- Ran the native binary category encoder on mixed port/SPI/missing inputs; its output was finite. Verified integer storage and preservation of Label/Attack.
+- Validated notebook schema and compiled all 48 code cells. The full source dataset and full model/sampler runs were not repeated.
+
+**Rerun instructions:**
+
+- Reload the updated type-conversion definition and rerun Load and inspect to read the raw Parquet again. The two reported ESP values should be retained as 538989345, not replaced with missing or clipped.
+- If using the earlier generic diagnostic snippet, its 65535-only check will still flag ESP SPI values; interpret that table by protocol or apply the same ESP-specific bound.
+
 ### 2026-11-15 11:51:04+02:00 — Normalize internal whitespace in UNSW headers
 
 **Timezone:** Africa/Cairo.
