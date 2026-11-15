@@ -8,6 +8,33 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 11:22:01+02:00 — Match UNSW binary and attack-type targets to the NF format
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/UNSW-Preprocessing.ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Enforced the requested target format before sampling: `Label` is uint8 with 0=benign and 1=attack; `Attack` is text containing `BENIGN` or the specific attack name.
+- Normalized Normal/Benign spellings case-insensitively to BENIGN, and filled a blank benign name only for Label=0. Named attacks are retained; missing attack names on Label=1 and contradictory Label/Attack pairs raise clear errors instead of silently relabelling rows.
+- Added a visible Attack-by-Label crosstab after loading and updated the type-casting guide and generated output README. Main loading and independent Testing share the same normalization. Split exports preserve both targets; balanced export continues to restore binary Label from the original Attack-to-Label mapping.
+- Preserved all prior README history and the existing feature transformations, split/holdout settings and sampling algorithms.
+
+**Validation:**
+
+- Validated the notebook schema and compiled every code cell.
+- Tested Normal/Benign variants, whitespace, blank benign names, specific attack names, binary uint8 storage and rejection of contradictory targets.
+- Ran synthetic native-UNSW preprocessing with and without optional IPs/ports; verified Label/Attack agreement in train, validation, test and the independent Testing loader.
+- Executed the actual prepared-training loader, ADASYN, Tomek Links and balanced export on balanced and imbalanced synthetic inputs. Covered skipped ADASYN and actual generated rows; all saved target pairs followed the requested format and retained the specific attack names.
+
+**Rerun instructions and limits:**
+
+- Run from Setup after pulling/importing the updated PR branch to regenerate the preprocessor and saved datasets. BENIGN replaces the previous Normal spelling; use BENIGN in downstream class filters.
+- The full source dataset was unavailable. Validation used synthetic data and does not establish full-data runtime, RAM use or accuracy.
+
 ### 2026-11-15 10:55:23+02:00 — Restore native UNSW-NB15 types before preprocessing
 
 **Timezone:** Africa/Cairo.
