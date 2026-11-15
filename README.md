@@ -8,6 +8,39 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-15 14:23:07+02:00 — Add NF_TON_IOT partial balancing, checkpoints, Drive backup and model comparisons
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Reduced the per-Attack sample cap to 100,000 before splitting, retaining every row from smaller classes. Main ADASYN now automatically selects classes below 0.5 of the largest prepared training class and requests 0.5 of that count; the existing 3% tolerance applies around this requested target. Unselected classes remain available for neighbour searches. Attack remains the resampling/model target and Label remains binary.
+- Save a full, uncompressed ADASYN checkpoint atomically before Tomek Links. Matching restores skip working-matrix loading and ADASYN, restore counts/schema/target mapping/generated previews, and label original cached compute times. SHA256 of prepared training content, feature order, seed, cap, policy and package versions guard reuse; content-based signatures allow copied runs to resume. Disabled the existing output-folder deletion cell so it cannot erase saved checkpoints. Kept Tomek, timing tables and Plotly in separate cells, without periodic still-running messages.
+- Added optional cuML acceleration before sklearn/fastai imports, with visible CPU fallback and cuML info dispatch logs. No GPU dependencies are automatically installed. Other supported preprocessing estimators may also accelerate; actual GPU execution depends on compatible installed RAPIDS/CUDA and supported operations.
+- Added automatic Drive copying after each completed local export/checkpoint/report/model. Kaggle uses an authorized rclone remote and private `RCLONE_CONFIG` secret; the destination is configurable with `DRIVE_PARENT`/`DRIVE_REMOTE`. Colab uses mounted Drive. Setup/transfer errors preserve local files, record pending uploads and allow a final retry; credentials are held in temporary files outside output directories. Added an opt-in rclone installation cell.
+- Added an independent, opt-in prepared-data test block: unresampled baseline plus paired selection/target ratios 0.25/0.25, 0.5/0.5 and 0.75/0.75. All four use the same full prepared training matrix, untouched prepared validation data and MLP configuration (one 32-unit ReLU layer, Adam, learning rate 0.001, alpha 1e-4, seed SEED, 30 epochs). Test and zero-day files are excluded from these comparisons. Equal epochs permit more optimizer updates for larger resampled training sets.
+- Save per-case class counts, genuine synthetic encoded-column previews, sampler/training timings, matrix size, accuracy, balanced accuracy, macro/weighted F1, per-Attack precision/recall/F1, confusion matrices, models and comparison tables. Compatible completed results and ADASYN checkpoints are reused with explicit cache labels. Sampling failures are reported without silently substituting another sampler. Updated notebook guidance and generated output README; preserved existing categorical diagnostics and legacy raw-data benchmarks. Other notebooks/forks are unchanged.
+
+**Validation:**
+
+- Validated notebook schema and compiled all 69 code cells.
+- Ran the actual NF feature transformations, fitted preprocessing, batched Parquet export, automatic partial-class ADASYN, Tomek, summaries, Plotly export and balanced export on synthetic NF data. Verified binary Label/text Attack preservation and that upload hooks receive closed, readable files.
+- Verified a fresh-session checkpoint restore reproduces the same ADASYN matrix and Tomek result without the main loading cell, and that copied prepared content retains its signature. Tested rejection of changed source/settings/features, interrupted checkpoint writes preserving the previous complete file, no-op ADASYN, empty encoded-column previews and singleton-class errors.
+- Executed all four 30-epoch MLP cases on the same synthetic prepared inputs, reproduced saved validation accuracy from saved models, and verified completed-result reuse skips training. The 0.5 comparison reused the main ADASYN checkpoint.
+- Mock-tested missing Drive setup, successful/failed transfers, local-file retention and credential permissions/removal, plus CPU fallback and the GPU fresh-kernel guard. No live GPU or Google Drive transfer was available for validation.
+
+**Rerun instructions and limits:**
+
+- Restart the kernel, run startup first, and rerun the preprocessing pipeline from source to regenerate the 100,000-per-class sample and prepared splits. Existing 300,000-cap outputs are not automatically converted. ADASYN requested counts are approximate; inspect actual counts after generation.
+- For Drive backup, configure an authorized Google Drive remote once using `rclone config`, store its private config as the enabled Kaggle Secret `RCLONE_CONFIG`, install rclone using the opt-in setup cell if needed, enable Internet, and choose `DRIVE_PARENT`. Credentials must not be committed to Git. Files remain local if setup/upload fails; use the final retry cell after correction. Keep the Kaggle outputs before discarding a session. The retry cell should run while no save cell is writing.
+- For fresh-session resume, retain/copy the complete prepared output run, run startup/imports, Drive configuration, dataset/sampling constants and imbalance configuration/helpers, set `RESUME_OUTPUT_DIR`, then run Restore a matching ADASYN checkpoint and continue. Skip optional raw-input inspection cells if raw splits are absent. Set `REUSE_ADASYN_CHECKPOINT=False` to recompute after a mismatch; source/policy changes require appropriate prepared outputs.
+- Enable `RUN_THRESHOLD_TESTS=True` to run the model comparison. The paired policies change selection and target together; they are not a selection-only ablation. Select a policy with validation results and reserve test data for final evaluation. Stored compute durations, current wall times, result reuse and ADASYN reuse are distinguished.
+- Full-dataset runtime, peak RAM, model quality, native GPU execution and live Drive authentication/upload were not measured. Tests load full prepared training and validation matrices and can be expensive; checkpointing adds disk/write time. Matrix GiB is not peak process RAM. CPU/GPU numerical and neighbour-tie differences can affect outcomes. Saved HTML plots use the Plotly CDN.
+
 ### 2026-11-15 12:14:09+02:00 — Preserve ESP SPI values in the UNSW destination-port slot
 
 **Timezone:** Africa/Cairo.
@@ -356,6 +389,7 @@ This written history starts with the entry below. Earlier versions remain availa
 - Restart the Kaggle/Colab session and run the notebook from Setup through preprocessing, export, ADASYN and Tomek Links. Regenerate the preprocessor and prepared datasets; do not reuse older artifacts for this new flow.
 - Do not manually log-transform data before passing it to this saved preprocessor, and do not transform the prepared Parquet data again. When loading joblib in a new session, define `EXTREME_COLUMNS` and `compress_extreme_values` along with the existing encoding helpers first.
 - The full NF-ToN-IoT source dataset was unavailable in the editing environment. Full categorical processing, Parquet export, and the full ADASYN/Tomek run have not been executed here. Synthetic numerical checks are not a full-data performance or accuracy evaluation.
+
 
 
 
