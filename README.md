@@ -8,6 +8,44 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-16 12:18:52+02:00 — Roll out simplified imbalance and duration reporting across preprocessing notebooks
+
+**Timezone:** Africa/Cairo.
+
+**Notebooks:**
+
+- `Notebooks/CIC_Preprocessing.ipynb`.
+- `Notebooks/Fork of CIC_Preprocessing (CIC-BoT-IoT).ipynb`.
+- `Notebooks/Fork of CIC_Preprocessing (CSE-CIC-IDS2018).ipynb`.
+- `Notebooks/Fork of NF-Preprocessing (NF_BOT_IOT).ipynb`.
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`.
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`.
+- `Notebooks/NF-Preprocessing.ipynb`.
+- `Notebooks/UNSW-Preprocessing.ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:**
+
+- Applied the current NF_TON_IOT imbalance workflow to the three main NF/CIC/native-UNSW notebooks and all remaining preprocessing forks. The already-updated `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb` was used as the reference and was not rewritten. No separate native-UNSW preprocessing fork exists in the current Notebooks directory; the NF_UNSW_NB15 fork is included as an NF extractor notebook. Autoencoder and ANN notebooks are unchanged.
+- Aligned sampling to 100,000 original rows per Attack before splitting, retaining every smaller-class row. Main ADASYN selects classes below 0.5 of the largest prepared training class and requests 0.5 of that count, using a 3% tolerance around the requested target. This replaces older 200,000/300,000 caps and stale 1% settings in some notebooks. Attack remains the multiclass resampling target; binary Label is restored through the original mapping.
+- Added the simplified four-helper workflow: batched matrix loading, genuine generated-row previews, prepared-file fingerprinting and atomic full-ADASYN checkpoint saving. Stage-specific selection and restore checks remain visible in their own cells. Retained the RAM guard, file-content/feature-order/settings/package-version compatibility checks and distinct cached-compute labels. Kept ADASYN, checkpoint saving, Tomek, result tables, Plotly and balanced export in separate stages. Moved existing dtype/outlier inspections into optional Testing cells and replaced the output-folder deletion instructions with checkpoint-retention guidance.
+- Added independent prepared-data comparisons for an unresampled baseline plus paired selection/target ratios 0.25/0.25, 0.5/0.5 and 0.75/0.75. All cases use the same full prepared training input and untouched prepared validation set with the same 32-unit ReLU MLP, Adam, seed and 30-epoch settings. Save models, counts, sampler/training durations, matrix sizes, accuracy, balanced accuracy, macro/weighted F1, per-Attack reports, confusion matrices and comparison CSV/HTML files. Reuse compatible checkpoints/results; failures are reported without substituting another sampler.
+- Standardized notebook-generated elapsed times to hours/minutes/seconds, including preprocessing fitting, batch exports, resampling, cached results and legacy experiment reports. Time/fit_time and the named threshold-time columns replace seconds-only report columns. Numeric seconds remain inside checkpoint calculations. Compatible older numeric-second model metrics are formatted when reused.
+- Added the optional early cuML startup with visible CPU fallback and dispatch logs, before sklearn/fastai imports. GPU dependencies are not automatically installed. Original Colab Drive mounts are retained; no automatic Drive-upload/rclone code was introduced.
+- Preserved each file's dataset selection, saved Kaggle/top-level metadata, split/holdout logic, feature encoders, scalers and PCA configuration. NF extreme-value/ICMP/flag handling remains confined to NF. CIC receives no SECOND_BYTES logic; native UNSW keeps its exact header/type/target conversion and ESP destination-slot SPI rules.
+- Retained existing raw/encoded/resampled categorical-domain diagnostics and genuine synthetic-row previews. Added the same diagnostics to native UNSW, including its one-hot, binary port and optional joint IP-PCA mappings. Updated every generated output README and preserved all earlier root README history.
+
+**Validation:**
+
+- Validated all eight updated notebook schemas and compiled all 466 code cells. Confirmed original dataset selections/top-level metadata and source loading, split, encoding and native-UNSW casting definitions are preserved. Checked four imbalance helpers per notebook and separation of Tomek from Plotly.
+- Executed actual preprocessing, batched Parquet exports, main ADASYN/Tomek, result tables/plots and balanced exports on synthetic fixtures for every updated file. Compared sampler matrices/targets exactly with direct ADASYN/Tomek calls using the requested policy. Verified stored schema/feature order and binary Label/text Attack preservation.
+- Ran raw/encoded/resampled categorical audits, checked raw-domain counts and genuine generated-row positions/values, and exercised fresh-session checkpoint restore plus stale-seed rejection in every notebook.
+- Executed the baseline and all three 30-epoch MLP cases in every notebook, verified saved models/reports and the shared 0.5 ADASYN checkpoint, then confirmed completed-result reuse skips model training. Checked formatted timing tables, JSON/CSV reports and minute/hour boundary behavior.
+- Covered CIC with optional numeric PCA enabled and native UNSW both with and without IP/port identifiers. Verified ESP hexadecimal dsport is retained as 538989345 and the internally spaced ct_src_ltm header is normalized. No NF extreme-column code is present in CIC or native UNSW.
+
+**Rerun instructions and limits:** Start in a fresh kernel and run optional GPU startup before sklearn/fastai imports, then Setup to define format_duration. Reload/sample/split/refit/export from source to apply the 100,000-per-class cap; existing prepared outputs are not retroactively capped. Resume compatible prepared runs by setting RESUME_OUTPUT_DIR and running imbalance settings, both utility cells and checkpoint restore; regenerate stale checkpoints explicitly. Enable RUN_THRESHOLD_TESTS=True for model comparisons and RUN_PREPARED_INSPECTIONS=True only for optional inspections when their original inputs are available. Native UNSW's new categorical audit needs a new export to create its raw baseline. Update downstream readers for renamed time columns. Full source datasets, live GPU acceleration and full-data runtime/peak RAM/model quality were not tested. Validation used synthetic data; tests load full prepared train/validation matrices, and checkpoints add disk/write cost. Saved HTML uses Plotly CDN. Preserved exported Kaggle settings may still differ from settings changed only in a current Kaggle draft.
+
 ### 2026-11-15 15:17:51+02:00 — Simplify NF_TON_IOT imbalance cells and format elapsed time
 
 **Timezone:** Africa/Cairo.
