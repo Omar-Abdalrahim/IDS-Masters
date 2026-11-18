@@ -8,6 +8,20 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-18 14:55:15+02:00 — Preserve NF_TON_IOT binary features and compare categorical samplers
+
+**Timezone:** Africa/Cairo.
+
+**Notebook:** `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`.
+
+**Other files:** `README.md`.
+
+**Changes:** Route existing train-observed numeric/boolean 0/1 fields through a train-fitted mode imputer only, bypassing one-hot/binary encoding, scaling and PCA. Keep decomposed flag indicators unchanged. Validate every exported binary output before uint8 conversion and compare non-missing raw binary values with their prepared outputs. Save a binary preprocessing audit and a versioned preprocessing contract. Replace the threshold-comparison block with exactly three code cells: fixed baseline; custom categorical ADASYN with k-same-Attack neighbor voting; and SMOTENC plus comparison summaries. Treat full one-hot groups and full binary-port groups as individual logical categories, retaining the original model feature order after decoding. Use identical training/validation rows, targets, seed, MLP and epoch settings, and optional identical original-majority Tomek cleaning on both samplers. Verify all-row category domains immediately after oversampling and after optional cleaning. Save reports, previews, models, confusion matrices, counts and h/m/s durations in sampler_comparison/. Legacy main standard-ADASYN balancing is off by default to avoid interpolating categorical bits before the new tests. Existing optional raw benchmarks remain disabled. Preserve dataset/split/extreme-compression/identifier configuration and Kaggle metadata.
+
+**Validation:** Validated the notebook schema and compiled every code cell. Ran preprocessing, export and all three 30-epoch comparisons with Tomek on two synthetic NF-style fixtures. Verified binary passthrough, training-fitted mode imputation, zero categorical violations before and after Tomek, rejection of an injected fractional category, and a fixture that requires neighbor voting. With no native binary inputs, prepared values and feature order matched the original preprocessing. Compared sparse voting against stock imbalanced-learn 0.14.2 SMOTENC on fixtures with no vote ties, including zero numerical spread. The outputs matched exactly. Kaggle metadata was preserved.
+
+**Rerun instructions and limits:** Refit and export before running the three Testing cells. The comparison starts fresh from the new prepared files. Per-field voting can change category proportions and cross-field combinations. Identifier PCA scores are continuous. SMOTENC uses sparse category votes during generation to avoid a dense array spanning all port categories. In the zero-spread edge case, the upstream fit can still allocate a dense array and is checked against available memory. Tied votes use the notebook's seeded random tie selection. Full-data runtime, peak RAM, model quality and GPU behavior require a Kaggle run.
+
 ### 2026-11-16 12:18:52+02:00 — Roll out simplified imbalance and duration reporting across preprocessing notebooks
 
 **Timezone:** Africa/Cairo.
