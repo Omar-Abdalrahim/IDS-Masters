@@ -11,6 +11,19 @@ This written history starts with the entry below. Earlier versions remain availa
 
 
 
+
+### 2026-11-22 13:30:06+02:00 — Limit the built-in SMOTENC workspace in NF_TON_IOT
+
+Affected notebook is `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`.
+
+Other changed file is `README.md`.
+
+Section 7 and the sampler comparison estimate built-in SMOTENC's dense workspace from training class sizes, category counts, and available memory. When the estimate is too large for one fit, the notebook runs stock SMOTENC in smaller batches and retains only the generated rows from each batch. Each fit uses the original training data and the requested class totals are preserved. Each batch receives its own seed. Batch size depends on available memory, so batched runs can generate different examples from a single fit. The notebook prints the memory estimate and batch progress, and raises a Python error when even a one-row batch appears too large.
+
+Validated the notebook schema and ran synthetic Section 7, checkpoint resume, and the three-method comparison. Verified exact equivalence to a direct stock call on the one-fit path and checked the class counts, unchanged original rows, valid categories, repeatability with a fixed batch size, and early failure on a forced low-memory budget. Full Kaggle execution and the root cause of the reported crash were not confirmed.
+
+Reuse the existing binary-preserving prepared run with `RESUME_OUTPUT_DIR` and enable `HANDEL_IMBALANCE` to retry Section 7. If the fixed workspace still exceeds available RAM, use more available RAM or prepare a smaller training sample.
+
 ### 2026-11-22 12:43:55+02:00 — Apply built-in SMOTENC and comparison exports to the CIC forks
 
 Affected notebooks
