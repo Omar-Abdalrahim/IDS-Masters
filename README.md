@@ -8,6 +8,25 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+
+### 2026-11-22 12:07:32+02:00 — Use SMOTENC in Section 7 and add comparison exports
+
+Affected notebooks
+
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+
+Other changed file is `README.md`.
+
+Section 7 now uses the same category-preserving SMOTENC implementation as the three-method comparison, followed by Tomek Links on the original majority Attack. This keeps category indicators valid and retains the prepared training schema, including both targets. It writes `train_smotenc_tomek.parquet`, a generated-row preview, and a sampler-specific checkpoint. The Testing diagnostic reads these outputs and also supports older ADASYN exports.
+
+The comparison has independent switches for saving reports, plots, audits, previews, and models, and for saving each method's full model-ready training Parquet. Every save goes into a timestamped directory under `sampler_comparison/`. Standard ADASYN keeps fractional indicators in its exported training data. Comments in the custom categorical ADASYN cell explain the difficulty weights, same-Attack interpolation, category voting, and ties.
+
+Cleared saved cell outputs and execution metadata before publishing. Validated all three notebook schemas and code cells, and verified that Kaggle dataset and runtime settings were preserved. Synthetic data runs exercised preprocessing export, SMOTENC, Tomek, checkpoint resume and stale-setting rejection, all three MLP comparisons, categorical audits, and all four save-switch combinations. Verified that each comparison Parquet matched the features and Attack targets passed to its MLP. The prepared train, validation, and test files were byte-identical after the runs. Full Kaggle datasets, runtime, and peak memory remain untested.
+
+Reuse a prepared run with the binary-preserving preprocessing contract or rerun preprocessing and export. Enable `HANDEL_IMBALANCE` to run Section 7. Set `COMPARISON_SAVE_DATASETS=True` in the first Testing comparison cell to save full training datasets. Use the corresponding prepared validation and test files for every method.
+
 ### 2026-11-22 11:09:35+02:00 — Compare standard ADASYN and categorical voting across all preprocessing forks
 
 Timezone is Africa/Cairo.
