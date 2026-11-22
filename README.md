@@ -9,6 +9,23 @@ For every future repository change, read this README first and add a new entry b
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
 
+
+### 2026-11-22 12:25:23+02:00 — Use built-in SMOTENC in the three NF forks
+
+Affected notebooks
+
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+
+Other changed file is `README.md`.
+
+Call imbalanced-learn's built-in `SMOTENC.fit_resample` in Section 7 and the three-method comparison to use the library's original sample generation. The notebooks still assemble logical categorical fields from the prepared encodings before sampling and restore the prepared features afterward. The custom voting helper belongs to the categorical ADASYN comparison. Section 7 uses `smotenc_builtin_checkpoint.joblib` so it can resume built-in SMOTENC outputs without reusing checkpoints from the earlier subclass.
+
+Validated the notebook schemas and ran synthetic preprocessing, Section 7 with checkpoint resume, and all three comparisons on each fork. On these fixtures, the Section 7 resample and the SMOTENC rows passed to the comparison model matched a direct stock SMOTENC call, with Tomek Links applied when enabled. Confirmed that the prior checkpoint was ignored and that the comparison exports and category audits worked.
+
+Reuse the existing prepared inputs and rerun Section 7 or the comparison to get results from the built-in sampler. Built-in sample generation can use substantial RAM for high-cardinality categories. Full Kaggle datasets and peak memory were not tested.
+
 ### 2026-11-22 12:07:32+02:00 — Use SMOTENC in Section 7 and add comparison exports
 
 Affected notebooks
