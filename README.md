@@ -8,6 +8,29 @@ For every future repository change, read this README first and add a new entry b
 
 This written history starts with the entry below. Earlier versions remain available in the [Git commit history](https://github.com/Omar-Abdalrahim/IDS-Masters/commits/main/).
 
+### 2026-11-22 11:09:35+02:00 — Compare standard ADASYN and categorical voting across all preprocessing forks
+
+Timezone is Africa/Cairo.
+
+Affected notebooks
+
+- `Notebooks/Fork of CIC_Preprocessing (CIC-BoT-IoT).ipynb`
+- `Notebooks/Fork of CIC_Preprocessing (CSE-CIC-IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_BOT_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_CSE_CIC_IDS2018).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_TON_IOT).ipynb`
+- `Notebooks/Fork of NF-Preprocessing (NF_UNSW_NB15).ipynb`
+
+Other changed file is `README.md`.
+
+The three Testing cells use standard imbalanced-learn ADASYN as the baseline, then run voting categorical ADASYN and SMOTENC. All three fit the same 32-unit MLP with the same seed, prepared training data, Attack targets, validation split and optional original-majority Tomek policy. The baseline uses its original synthetic values and reports fractional indicators. The voting methods preserve complete one-hot and binary-encoded patterns and check every categorical feature before and after optional Tomek. The comparison reports validation scores, Attack counts, per-class metrics, confusion matrices, times and generated examples.
+
+Existing numeric and Boolean 0/1 fields bypass encoding, scaling and PCA. Missing binary values use the training mode. Parquet export checks the binary values before writing uint8 and confirms that non-missing values match the inputs. The separate legacy imbalance run is off by default because the Testing block runs the standard sampler as its baseline. Dataset settings and notebook metadata were preserved.
+
+Validated all six notebook schemas and compiled all code cells. Ran preprocessing fit, export and all three 30-epoch comparisons with Tomek on synthetic fixtures for every fork. Checked that the baseline exactly matches a direct ADASYN call, that the baseline audit detects fractional values, and that both voting audits report zero violations before and after Tomek. Also exercised CIC with a binary Protocol and enabled numeric PCA. These are synthetic CPU checks. Full Kaggle runs, metrics, runtime and peak RAM are pending.
+
+Rerun preprocessing and export before running the three Testing cells in order. Results are saved below `sampler_comparison/`. ADASYN may round its per-row allocations, so generated totals can differ from the requested totals. If standard ADASYN rejects a class distribution, the comparison records the error and the voting cells can still run.
+
 ### 2026-11-18 14:55:15+02:00 — Preserve NF_TON_IOT binary features and compare categorical samplers
 
 **Timezone:** Africa/Cairo.
