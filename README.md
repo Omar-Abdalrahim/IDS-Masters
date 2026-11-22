@@ -10,6 +10,24 @@ This written history starts with the entry below. Earlier versions remain availa
 
 
 
+
+### 2026-11-22 12:43:55+02:00 — Apply built-in SMOTENC and comparison exports to the CIC forks
+
+Affected notebooks
+
+- `Notebooks/Fork of CIC_Preprocessing (CIC-BoT-IoT).ipynb`
+- `Notebooks/Fork of CIC_Preprocessing (CSE-CIC-IDS2018).ipynb`
+
+Other changed file is `README.md`.
+
+Section 7 uses imbalanced-learn's built-in SMOTENC followed by Tomek Links on the original majority Attack. It preserves the prepared training schema, including binary Label and text Attack. One-hot Protocol is handled as one logical category, raw binary indicators are separate categorical fields, and optional numeric PCA features are continuous. Section 7 writes `train_smotenc_tomek.parquet` and uses a dedicated built-in SMOTENC checkpoint. The categorical diagnostic supports both the new outputs and older ADASYN exports.
+
+The three-method comparison uses built-in SMOTENC alongside standard ADASYN and voting categorical ADASYN. It has independent switches for saving reports and models, and for saving full training Parquet files. Comments explain how the custom categorical ADASYN allocates, interpolates, and votes.
+
+Validated notebook schemas and code cells. Ran synthetic preprocessing, Section 7, checkpoint resume, and the three-method comparison for both forks with one-hot Protocol and with binary Protocol plus numeric PCA. Verified resampled rows against direct built-in SMOTENC calls, the export switches, and the original prepared train/validation/test files after the run. Cleared saved cell outputs and execution metadata before publishing and verified that Kaggle settings were preserved.
+
+Existing binary-preserving prepared runs can be reused. Enable `HANDEL_IMBALANCE` to run Section 7 and `COMPARISON_SAVE_DATASETS` to save the comparison training Parquets. Full Kaggle runs and peak memory were not verified.
+
 ### 2026-11-22 12:25:23+02:00 — Use built-in SMOTENC in the three NF forks
 
 Affected notebooks
